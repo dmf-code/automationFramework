@@ -1,0 +1,4 @@
+greenlet==1.0a1
+playwright==0.162.2
+pyee==8.1.0
+typing-extensions==3.7.4.3
