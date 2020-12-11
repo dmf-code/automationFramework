@@ -1,4 +1,6 @@
 from abstracts.singleton import Singleton
+from core.browser import Browser
+import time
 
 
 class Engine(metaclass=Singleton):
@@ -7,4 +9,7 @@ class Engine(metaclass=Singleton):
         pass
 
     def scheduler(self):
-        pass
+        page = Browser().get_current_page()
+        print(page)
+        page.goto('https://www.baidu.com')
+        time.sleep(10)
