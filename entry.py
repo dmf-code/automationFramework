@@ -18,7 +18,8 @@ class Entry(metaclass=Singleton):
         self.parser.add_argument('--debug', dest='debug', required=False, help='debug signal', default=False)
         return self.parser.parse_args()
 
-    def run(self):
+    @staticmethod
+    def run():
         try:
             app = Application().app()
             app.set('browser', Browser())
@@ -27,8 +28,6 @@ class Entry(metaclass=Singleton):
             Facade().init(app)
             print('app', app)
             app.run()
-            # app.a = 1
-            # print(app.b)
         except Exception as e:
             print('into exception')
             print(e)

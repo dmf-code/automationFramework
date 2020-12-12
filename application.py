@@ -1,19 +1,17 @@
 from abstracts.singleton import Singleton
-from core.browser import Browser
-from core.engine import Engine
+from core.container import Container
 
 
 class Application(metaclass=Singleton):
-    __container = {}
+    __container = Container()
 
     def set(self, name, value):
-        self.__container[name] = value
+        self.__container.set(name, value)
 
     def app(self) -> 'Application':
         print('app')
         return self
 
     def run(self):
-        print('application run')
         self.__container.get('browser').generate_browser(self.__container.get('engine'))
 

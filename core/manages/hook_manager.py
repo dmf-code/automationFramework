@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
+from core.manages.global_manager import GlobalManager
 from abstracts.singleton import Singleton
 from utils import convert_big_hump
-from core.manages.global_manager import GlobalManager
-from core import dirs
+from core.config import Config
 import importlib
 import os
 
@@ -12,7 +12,7 @@ class HookManager(metaclass=Singleton):
 
     def __init__(self):
         self.file_name = None
-        self.hooks_name = os.listdir(dirs['hooks'])
+        self.hooks_name = os.listdir(Config().get_dir().hooks())
         if GlobalManager().debug:
             print('use hook: ', self.hooks_name)
 
