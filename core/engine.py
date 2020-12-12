@@ -1,4 +1,5 @@
 from abstracts.singleton import Singleton
+from core.facade import Facade
 from .browser import Browser
 import time
 
@@ -15,4 +16,5 @@ class Engine(metaclass=Singleton):
         print('page')
         print(page)
         page.goto('https://www.baidu.com')
+        print(Facade().core_name)
         time.sleep(1)

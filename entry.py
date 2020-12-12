@@ -2,6 +2,7 @@ from abstracts.singleton import Singleton
 from application import Application
 from core.browser import Browser
 from core.engine import Engine
+from core.facade import Facade
 import argparse
 
 
@@ -19,7 +20,11 @@ class Entry(metaclass=Singleton):
 
     def run(self):
         try:
-            app = Application(Browser(), Engine()).app()
+            app = Application().app()
+            app.set('browser', Browser())
+            app.set('engine', Engine())
+            app.set('facade', Facade())
+            Facade().init(app)
             print('app', app)
             app.run()
             # app.a = 1

@@ -1,12 +1,13 @@
 from abstracts.singleton import Singleton
-from core import ROOT, ENV, LOGS_DIR, dirs
+from core import ROOT, ENV
+from core.dir import Dir
 import yaml
 import os
 
 
 class Config(metaclass=Singleton):
     __yaml_config = None
-    __dir = dirs
+    __dir = Dir()
 
     def __init__(self):
         with open(ROOT + os.path.sep + 'config.yml') as f:

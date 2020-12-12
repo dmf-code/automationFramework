@@ -22,9 +22,7 @@ class Browser(metaclass=Singleton):
             self.close()
 
     def open_browser(self):
-        print(self.__browser)
         self.__launch = self.__browser.launch(headless=False)
-        print(self.__launch)
 
     def open_page(self, name='default'):
         self.__pages[name] = self.__launch.newPage()
