@@ -1,4 +1,5 @@
 from abstracts.singleton import Singleton
+from application import Application
 from core.browser import Browser
 from core.engine import Engine
 import argparse
@@ -18,11 +19,11 @@ class Entry(metaclass=Singleton):
 
     def run(self):
         try:
-            Browser().generate_browser()
-            Browser().open_browser()
-            Browser().open_page()
-            Engine().scheduler()
-            Browser().close()
+            app = Application(Browser(), Engine()).app()
+            print('app', app)
+            app.run()
+            # app.a = 1
+            # print(app.b)
         except Exception as e:
             print('into exception')
             print(e)

@@ -5,42 +5,43 @@ from utils.log import Log
 
 class Browser(metaclass=Singleton):
 
-    _browser = None
-    _launch = None
-    _pages = {}
-    _current_page = None
-    _browser_type = 'chromium'
+    __browser = None
+    __launch = None
+    __pages = {}
+    __current_page = None
+    __browser_type = 'chromium'
 
-    def generate_browser(self, browser_type='chromium'):
+    def generate_browser(self, engine, browser_type='chromium'):
         with sync_playwright() as p:
             browser = {'chromium': p.chromium, 'firefox': p.firefox, 'webkit': p.webkit}
-            self._browser = browser[browser_type]
-            self._browser_type = browser_type
-
-        Log().info('generate_browser')
+            self.__browser = browser[browser_type]
+            self.__browser_type = browser_type
+            self.open_browser()
+            self.open_page()
+            engine.scheduler()
+            self.close()
 
     def open_browser(self):
-        self._launch = self._browser.launch(headless=False)
-        Log().info('open_browser')
+        print(self.__browser)
+        self.__launch = self.__browser.launch(headless=False)
+        print(self.__launch)
 
     def open_page(self, name='default'):
-        self._pages[name] = self._launch.newPage()
-        self._current_page = self._pages[name]
-
-        Log().info('open_page')
+        self.__pages[name] = self.__launch.newPage()
+        self.__current_page = self.__pages[name]
 
     def select_page(self, name='default'):
-        self._current_page = self._pages[name]
-        return self._pages[name]
+        self.__current_page = self.__pages[name]
+        return self.__pages[name]
 
     def get_current_browser(self):
-        return self._browser
+        return self.__browser
 
     def get_current_launch(self):
-        return self._launch
+        return self.__launch
 
     def get_current_page(self):
-        return self._current_page
+        return self.__current_page
 
     def close(self):
-        self._launch.close()
+        self.__launch.close()
