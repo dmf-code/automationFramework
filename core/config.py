@@ -1,5 +1,5 @@
 from abstracts.singleton import Singleton
-from core import ROOT, ENV, LOGS_DIR, dirs
+from core import ROOT, ENV, dirs
 import yaml
 import os
 

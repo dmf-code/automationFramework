@@ -7,7 +7,6 @@ import datetime
 import logging
 import os
 
-
 coloredlogs.install(level='DEBUG')
 
 today = datetime.datetime.now().strftime("%Y%m%d")
@@ -78,6 +77,9 @@ class Log(metaclass=Singleton):
 
     def info(self, msg):
         self.logger.info(msg)
+
+    def error(self, msg):
+        self.logger.error(msg)
 
 
 if __name__ == '__main__':

@@ -5,11 +5,13 @@ import re
 
 
 class GlobalManager(metaclass=Singleton):
+    _spider_type = None
+    _task_name = None
+    _uuid = None
 
     def __init__(self):
         self._instances = {}
         self._storage = {}
-        self._system = {}
         self._db_args = {}
         self.for_stack = {}
         self.depth = 0
@@ -20,14 +22,6 @@ class GlobalManager(metaclass=Singleton):
         self.component_name = None
         self.component_type = None
         self.debug = Config().get()['debug']
-
-    def set_driver(self, driver):
-        if self.driver is None:
-            self.driver = driver
-        return self.driver
-
-    def get_driver(self):
-        return self.driver
 
     def loop_turn_on(self):
         self.is_loop = True
@@ -48,9 +42,9 @@ class GlobalManager(metaclass=Singleton):
         self.is_if = False
 
     def build(self, spider_type, task_name, uuid):
-        self._system['spider_type'] = spider_type
-        self._system['task_name'] = task_name
-        self._system['uuid'] = uuid
+        self._spider_type = spider_type
+        self._task_name = task_name
+        self._uuid = uuid
 
     def set(self, keys, value, type_='_storage'):
         data = getattr(self, type_, None)

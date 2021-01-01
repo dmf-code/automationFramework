@@ -10,3 +10,15 @@
 然后采用 `playwright` 的原因也很简单。这个有大厂进行支持，保证能够对问题进行修复。然后
 `chrome` 浏览器也是微软出品的，所以对于如何避免内存泄漏，操作浏览器根据高效，这个应该
 是有非常丰富的经验。
+
+### 部署
+
+```shell
+
+# 安装框架依赖包 
+pip install -r requirements.txt
+
+# 安装浏览器 Playwright requires Python 3.7+
+python -m playwright install
+
+```

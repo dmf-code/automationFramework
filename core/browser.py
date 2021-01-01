@@ -1,47 +1,43 @@
 from abstracts.singleton import Singleton
-from playwright import sync_playwright
-from utils.log import Log
 
 
 class Browser(metaclass=Singleton):
+    _browser = None
+    _launch = None
+    _contents = {}
+    _pages = {}
+    _current_page = None
+    _browser_type = 'chromium'
 
-    __browser = None
-    __launch = None
-    __pages = {}
-    __current_page = None
-    __browser_type = 'chromium'
+    def init(self, browser_type: str, browser: dict):
+        self._browser_type = browser_type
+        self._browser = browser[browser_type]
 
-    def generate_browser(self, engine, browser_type='chromium'):
-        with sync_playwright() as p:
-            browser = {'chromium': p.chromium, 'firefox': p.firefox, 'webkit': p.webkit}
-            self.__browser = browser[browser_type]
-            self.__browser_type = browser_type
-            self.open_browser()
-            self.open_page()
-            engine.scheduler()
-            self.close()
+    def launch(self):
+        self._launch = self._browser.launch(headless=False)
 
-    def open_browser(self):
-        print(self.__browser)
-        self.__launch = self.__browser.launch(headless=False)
-        print(self.__launch)
+    def open_content(self, name='default'):
+        self._contents[name] = {'content': self._launch.newContext()}
 
-    def open_page(self, name='default'):
-        self.__pages[name] = self.__launch.newPage()
-        self.__current_page = self.__pages[name]
+    def open_page(self, name='default', page_name='default'):
+        self._contents[name][page_name] = self._launch.newPage()
+        self._current_page = self._contents[name][page_name]
 
-    def select_page(self, name='default'):
-        self.__current_page = self.__pages[name]
-        return self.__pages[name]
+    def select_page(self, name='default', page_name='default'):
+        self._current_page = self._contents[name][page_name]
+        return self._current_page
 
     def get_current_browser(self):
-        return self.__browser
+        return self._browser
 
     def get_current_launch(self):
-        return self.__launch
+        return self._launch
+
+    def get_current_content(self):
+        return self._contents
 
     def get_current_page(self):
-        return self.__current_page
+        return self._current_page
 
     def close(self):
-        self.__launch.close()
+        return self._launch.close()

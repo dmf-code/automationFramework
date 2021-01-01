@@ -12,15 +12,15 @@ BIN_DIR = ROOT + os.path.sep + 'bin' + os.path.sep
 
 LOGS_DIR = ROOT + os.path.sep + 'logs' + os.path.sep
 
-COMPONENTS_DIR = ROOT + os.path.sep + 'components' + os.path.sep
-
-CONFIGS_DIR = ROOT + os.path.sep + 'configs' + os.path.sep
-
-HOOKS_DIR = ROOT + os.path.sep + 'hooks' + os.path.sep
-
 STORAGE_DIR = ROOT + os.path.sep + 'storages' + os.path.sep
 
 COOKIES_DIR = STORAGE_DIR + os.path.sep + 'cookies' + os.path.sep
+
+COMPONENTS_DIR = CORE + os.path.sep + 'components' + os.path.sep
+
+COMMANDS_DIR = CORE + os.path.sep + 'commands' + os.path.sep
+
+HOOKS_DIR = CORE + os.path.sep + 'hooks' + os.path.sep
 
 dirs = {
     'root': ROOT,
@@ -28,7 +28,7 @@ dirs = {
     'storage': STORAGE_DIR,
     'logs': LOGS_DIR,
     'components': COMPONENTS_DIR,
-    'configs': CONFIGS_DIR,
+    'commands': COMMANDS_DIR,
     'hooks': HOOKS_DIR,
     'cookies': COOKIES_DIR
 }
