@@ -3,7 +3,7 @@ from core import ROOT, BIN_DIR, \
     STORAGE_DIR, LOGS_DIR, \
     MANAGES_DIR, COMPONENTS_DIR, \
     CONFIGS_DIR, HOOKS_DIR, \
-    COOKIES_DIR
+    COMMANDS_DIR, COOKIES_DIR
 
 
 class Dir(metaclass=Singleton):
@@ -17,6 +17,7 @@ class Dir(metaclass=Singleton):
             'components': COMPONENTS_DIR,
             'configs': CONFIGS_DIR,
             'hooks': HOOKS_DIR,
+            'commands': COMMANDS_DIR,
             'cookies': COOKIES_DIR
         }
 
@@ -43,6 +44,9 @@ class Dir(metaclass=Singleton):
 
     def hooks(self):
         return self.path['hooks']
+
+    def commands(self):
+        return self.path['commands']
 
     def cookies(self):
         return self.path['cookies']

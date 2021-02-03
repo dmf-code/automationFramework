@@ -26,7 +26,7 @@ class Request(Base):
         url = self.url_format()
         if self.params.get('read_cookie', None):
             self.read_cookie()
-        self.driver.get(url)
+        self.driver.goto(url)
         return self.sleep()
 
     def default(self):

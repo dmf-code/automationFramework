@@ -22,7 +22,7 @@ class HookManager(metaclass=Singleton):
             raise Exception('{} is not exist in hooks dir'.format(self.file_name))
 
         if self.__hook is None:
-            load_module = importlib.import_module('titan.hooks.{}'.format(self.file_name))
+            load_module = importlib.import_module('core.hooks.{}'.format(self.file_name))
             if GlobalManager().debug:
                 print(load_module)
             self.__hook = getattr(load_module, convert_big_hump(self.file_name))
@@ -31,4 +31,4 @@ class HookManager(metaclass=Singleton):
 
 
 if __name__ == '__main__':
-    HookManager().build('common')
+    HookManager().build('default')

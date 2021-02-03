@@ -5,6 +5,9 @@ import re
 
 class Content(Base):
 
+    def page_content(self):
+        return self.page.content()
+
     def default(self):
         if not self.driver.find_elements_by_xpath(self.params['xpath']):
             if self.params.get('default', None) is not None:

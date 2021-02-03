@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-import timeit
+from core.manages.global_manager import GlobalManager
 from functools import wraps
-from titan.manages.global_manager import GlobalManager
+import timeit
 
 
 def run_time_sum(func):

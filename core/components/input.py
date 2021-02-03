@@ -17,7 +17,6 @@ class Input(Base):
             element.send_keys(Keys.BACK_SPACE)
 
     def text(self):
-        print(self.params)
         element = self.driver.find_element_by_xpath(self.params['xpath'])
         element.send_keys(self.params['text'])
 

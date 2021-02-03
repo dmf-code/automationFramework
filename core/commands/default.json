@@ -1,0 +1,15 @@
+[
+  {
+    "component": "request",
+    "args": {
+      "url": "https://www.baidu.com"
+    },
+    "type": "browser"
+  },
+
+  {
+    "component": "content",
+    "type": "page_content",
+    "return": "html"
+  }
+]

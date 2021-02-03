@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from abstracts.singleton import Singleton
 from utils import convert_big_hump
-from core import dirs
+from core.config import Config
 import importlib
 import os
 import re
@@ -21,17 +21,17 @@ class ComponentManager(metaclass=Singleton):
             else:
                 self.recursive_dir(path + p, prefix + p + ".", result)
 
-        result = list(filter(lambda x: re.match('\S+.py$', x), result))
+        result = list(filter(lambda x: re.match('\\S+.py$', x), result))
         return result
 
     def __init__(self):
-        self.components_name = self.recursive_dir(dirs['components'])
+        self.components_name = self.recursive_dir(Config().get_dir().components())
 
     def build(self, module, args=None):
         if '{}.py'.format(module) not in self.components_name:
             raise Exception('{} is not exist in components dir'.format(module))
         if module not in self.__contains:
-            load_module = importlib.import_module('titan.components.{}'.format(module))
+            load_module = importlib.import_module('core.components.{}'.format(module))
             ins = module.split('.')[-1]
             self.__contains[module] = getattr(load_module, convert_big_hump(ins))
 
@@ -44,4 +44,4 @@ class ComponentManager(metaclass=Singleton):
 
 if __name__ == '__main__':
     factory = ComponentManager()
-    factory.build('click')
+    factory.build('click', [])
