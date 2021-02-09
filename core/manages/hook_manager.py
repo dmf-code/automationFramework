@@ -1,18 +1,18 @@
 # -*- coding: utf-8 -*-
+from core.manages.global_manager import GlobalManager
 from abstracts.singleton import Singleton
 from utils import convert_big_hump
-from core.manages.global_manager import GlobalManager
-from core import dirs
+from core.config import Config
 import importlib
 import os
 
 
 class HookManager(metaclass=Singleton):
-    _hook = None
+    __hook = None
 
     def __init__(self):
         self.file_name = None
-        self.hooks_name = os.listdir(dirs['hooks'])
+        self.hooks_name = os.listdir(Config().get_dir().hooks())
         if GlobalManager().debug:
             print('use hook: ', self.hooks_name)
 
@@ -21,13 +21,13 @@ class HookManager(metaclass=Singleton):
         if '{}.py'.format(self.file_name) not in self.hooks_name:
             raise Exception('{} is not exist in hooks dir'.format(self.file_name))
 
-        if self._hook is None:
+        if self.__hook is None:
             load_module = importlib.import_module('core.hooks.{}'.format(self.file_name))
             if GlobalManager().debug:
                 print(load_module)
-            self._hook = getattr(load_module, convert_big_hump(self.file_name))
+            self.__hook = getattr(load_module, convert_big_hump(self.file_name))
 
-        return self._hook()
+        return self.__hook()
 
 
 if __name__ == '__main__':

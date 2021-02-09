@@ -13,10 +13,6 @@ class Base(metaclass=Singleton):
         pass
 
     @abstractmethod
-    def handle(self, *args, **kwargs):
-        pass
-
-    @abstractmethod
     def after(self, *args, **kwargs):
         pass
 
@@ -29,9 +25,13 @@ class Base(metaclass=Singleton):
         pass
 
     @abstractmethod
-    def get_args(self):
+    def load_params(self, *args, **kwargs):
         pass
 
     @abstractmethod
     def load_commands(self, *args, **kwargs):
+        pass
+
+    @abstractmethod
+    def data_processing(self, *args, **kwargs):
         pass

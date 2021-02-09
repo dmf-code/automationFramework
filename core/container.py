@@ -2,13 +2,13 @@ from abstracts.singleton import Singleton
 
 
 class Container(metaclass=Singleton):
-    _instances = {}
+    __instances = {}
 
     def instances(self):
-        return self._instances
+        return self.__instances
 
     def set(self, key, value):
-        self._instances[key] = value
+        self.__instances[key] = value
 
     def get(self, key):
-        return self._instances[key]
+        return self.__instances[key]

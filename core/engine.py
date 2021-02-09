@@ -1,107 +1,108 @@
-from core.manages.component_manager import ComponentManager
-from core.manages.global_manager import GlobalManager
-from core.manages.hook_manager import HookManager
 from abstracts.singleton import Singleton
-from playwright import sync_playwright
 from utils.printer import Printer
-from .browser import Browser
-from utils.log import Log
-import time
+from core.facade import Facade
+import traceback
 import re
 
 
 class Engine(metaclass=Singleton):
-    _commands = None
+
+    __hook = None
+    __param = None
+    __command = None
 
     def __init__(self):
         print('engine init')
         pass
 
-    def run(self, browser_type='chromium'):
-        try:
-            print('into engine run')
-            with sync_playwright() as p:
-                browser = {'chromium': p.chromium, 'firefox': p.firefox, 'webkit': p.webkit}
-                Browser().init(browser_type, browser)
-                Browser().launch()
-                Browser().open_content()
-                Browser().open_page()
-                self.scheduler()
-                Browser().close()
-        except Exception as e:
-            Browser().close()
-            print('into engine run except')
-            print(e)
+    def init(self, spider_type):
+        print('into init engine')
+        hook = Facade().get('hook').build(spider_type)
+
+        self.__hook = hook
+        self.__param = hook.load_params()
+        self.__command = hook.load_commands()
+        if Facade().get('global').debug:
+            print(self.__hook)
+            print(self.__command)
 
     def scheduler(self):
+        print('into scheduler')
         try:
-            print('into engine scheduler')
-            if self._commands is None:
-                raise Exception('Engine scheduler: commands is None')
-
-            self.execute(self._commands, 0)
+            self.__hook.before()
+            self.execute(self.__command, 0)
+            self.__hook.after()
+            self.__hook.data_processing()
         except Exception as e:
-            Log().info(e)
+            print(e)
+            print(traceback.print_exc())
+            print("into engine exception")
+            self.__hook.exception()
+        finally:
+            self.__hook.terminate()
 
     def execute(self, commands, depth):
-        GlobalManager().if_turn_on()
-        GlobalManager().depth = depth
-        for command in commands:
+        self.__hook.running()
+        global_manage = Facade().get('global')
+        component_manage = Facade().get('component')
 
+        global_manage.if_turn_on()
+        global_manage.depth = depth
+        for command in commands:
             if isinstance(command, list):
                 self.execute(command, depth + 1)
-                GlobalManager().if_turn_on()
+                global_manage.if_turn_on()
 
-                while GlobalManager().is_loop:
+                while global_manage.is_loop:
                     self.execute(command, depth + 1)
-                    GlobalManager().if_turn_on()
+                    global_manage.if_turn_on()
 
-                GlobalManager().depth = depth
+                global_manage.depth = depth
                 continue
 
             component_name = command['component'].lower()
             component_args = command.get('args', {})
             component_type = command.get('type', 'default')
 
-            if GlobalManager().debug:
+            if global_manage.debug:
                 Printer().init()
                 Printer().add_row(['exec command', command])
-                Printer().add_row(['before_if_status', GlobalManager().is_if])
-                Printer().add_row(['before_break_status', GlobalManager().is_break])
-                Printer().add_row(['before_loop_status', GlobalManager().is_loop])
+                Printer().add_row(['before_if_status', global_manage.is_if])
+                Printer().add_row(['before_break_status', global_manage.is_break])
+                Printer().add_row(['before_loop_status', global_manage.is_loop])
                 Printer().output()
 
             if command.get('db_args', None):
-                component_args['db_args'] = GlobalManager().get(component_args['dbArgs'], '_db_args')
+                component_args['db_args'] = global_manage.get(component_args['dbArgs'], '_db_args')
 
-            GlobalManager().component_name = component_name
-            GlobalManager().component_type = component_type
+            global_manage.component_name = component_name
+            global_manage.component_type = component_type
 
-            component = ComponentManager().build(component_name, component_args)
+            component = component_manage.build(component_name, component_args)
 
-            result = self.filter(component_args, component.run(component_type))
+            result = self.result_filter(component_args, component.run(component_type))
 
             if command.get('return', None):
-                GlobalManager().set(command['return'], result)
+                global_manage.set(command['return'], result)
 
-            if GlobalManager().debug:
+            if global_manage.debug:
                 Printer().init()
-                Printer().add_row(['after_if_status ', GlobalManager().is_if])
-                Printer().add_row(['after_break_status ', GlobalManager().is_break])
-                Printer().add_row(['after_loop_status ', GlobalManager().is_loop])
+                Printer().add_row(['after_if_status ', global_manage.is_if])
+                Printer().add_row(['after_break_status ', global_manage.is_break])
+                Printer().add_row(['after_loop_status ', global_manage.is_loop])
                 Printer().output()
 
-            if component_name == 'if' and not GlobalManager().is_if:
+            if component_name == 'if' and not global_manage.is_if:
                 return
 
-            if GlobalManager().is_break:
+            if global_manage.is_break:
                 return
 
-            if not GlobalManager().is_loop:
+            if not global_manage.is_loop:
                 return
 
     @staticmethod
-    def filter(component_args, text):
+    def result_filter(component_args, text):
         if component_args.get('filter', None) is None:
             return text
 
