@@ -13,24 +13,24 @@ from core.config import Config
 class Application(metaclass=Singleton):
     __spider_type = None
     __task_name = None
-    __container = Container()
+    __container = None
 
     def set(self, name, value):
         self.__container.set(name, value)
 
     def get(self, name):
-        self.__container.get(name)
+        return self.__container.get(name)
 
     def app(self) -> 'Application':
-        print('app')
         return self
 
     def container(self):
         return self.__container
 
-    def run(self, spider_type, task_name):
+    def init(self, spider_type, task_name):
         self.__spider_type = spider_type
         self.__task_name = task_name
+        self.__container = Container()
         self.set('app', self)
         self.set('browser', Browser())
         self.set('facade', Facade())
@@ -44,6 +44,4 @@ class Application(metaclass=Singleton):
 
         self.set('engine', Engine())
         Engine().init(spider_type)
-
-        self.__container.get('browser').generate_browser(self.__container.get('engine'))
-
+        return self

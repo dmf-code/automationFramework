@@ -8,14 +8,19 @@ import os
 
 class Request(Base):
     def url_format(self):
+        global_type = self.params.get('global_type', None)
+        if GlobalManager().debug:
+            print('global_type：', global_type)
+
+        if global_type is None:
+            params = GlobalManager().get()
+        else:
+            params = GlobalManager().get(type_=global_type)
+
+        if self.params.get('param', None):
+            return self.params['param'].format(**params)
+
         if self.params.get('url', None):
-            global_type = self.params.get('global_type', None)
-            if GlobalManager().debug:
-                print('global_type：', global_type)
-            if global_type is None:
-                params = GlobalManager().get()
-            else:
-                params = GlobalManager().get(type_=global_type)
             url = self.params['url'].format(**params)
             return url
 

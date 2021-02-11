@@ -29,5 +29,5 @@ class Default(Base):
             return commands
 
     def data_processing(self, *args, **kwargs):
-        data = Facade().get('global').get()
-        return data
+        data = Facade().get('global').get('html')
+        print(data)

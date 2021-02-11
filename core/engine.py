@@ -6,17 +6,11 @@ import re
 
 
 class Engine(metaclass=Singleton):
-
     __hook = None
     __param = None
     __command = None
 
-    def __init__(self):
-        print('engine init')
-        pass
-
     def init(self, spider_type):
-        print('into init engine')
         hook = Facade().get('hook').build(spider_type)
 
         self.__hook = hook
@@ -27,12 +21,13 @@ class Engine(metaclass=Singleton):
             print(self.__command)
 
     def scheduler(self):
-        print('into scheduler')
+        if Facade().get('global').debug:
+            print('into scheduler')
         try:
             self.__hook.before()
             self.execute(self.__command, 0)
-            self.__hook.after()
             self.__hook.data_processing()
+            self.__hook.after()
         except Exception as e:
             print(e)
             print(traceback.print_exc())

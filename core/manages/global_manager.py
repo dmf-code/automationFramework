@@ -11,7 +11,7 @@ class GlobalManager(metaclass=Singleton):
 
     def __init__(self):
         self._instances = {}
-        self._storage = {}
+        self._params = {}
         self._db_args = {}
         self.for_stack = {}
         self.depth = 0
@@ -46,7 +46,7 @@ class GlobalManager(metaclass=Singleton):
         self._task_name = task_name
         self._uuid = uuid
 
-    def set(self, keys, value, type_='_storage'):
+    def set(self, keys, value, type_='_params'):
         data = getattr(self, type_, None)
         if data is None:
             raise Exception('not have type: {}'.format(type_))
@@ -67,7 +67,7 @@ class GlobalManager(metaclass=Singleton):
         else:
             data[key] = value
 
-    def get(self, keys=None, type_='_storage'):
+    def get(self, keys=None, type_='_params'):
         value = getattr(self, type_, {})
 
         if keys is None:
