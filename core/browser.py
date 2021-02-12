@@ -1,5 +1,5 @@
 from abstracts.singleton import Singleton
-from playwright import sync_playwright
+from playwright.sync_api import sync_playwright
 from core.config import Config
 
 
@@ -24,7 +24,7 @@ class Browser(metaclass=Singleton):
         self.__launch = self.__browser.launch(headless=Config().get()['headless'])
 
     def open_page(self, name='default'):
-        self.__pages[name] = self.__launch.newPage()
+        self.__pages[name] = self.__launch.new_page()
         self.__current_page = self.__pages[name]
 
     def select_page(self, name='default'):
